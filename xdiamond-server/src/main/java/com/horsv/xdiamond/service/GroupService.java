@@ -1,0 +1,53 @@
+package com.horsv.xdiamond.service;
+
+import com.horsv.xdiamond.domain.Group;
+import com.horsv.xdiamond.domain.GroupExample;
+import com.horsv.xdiamond.persistence.GroupMapper;
+import com.horsv.xdiamond.persistence.UserGroupMapper;
+import com.horsv.xdiamond.persistence.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class GroupService {
+
+  @Autowired
+  UserMapper userMapper;
+  @Autowired
+  GroupMapper groupMapper;
+  @Autowired
+  UserGroupMapper userGroupMapper;
+
+  public List<Group> list() {
+    return groupMapper.selectByExample(new GroupExample());
+  }
+
+  public int insert(Group group) {
+    return groupMapper.insert(group);
+  }
+
+  public int delete(int id) {
+    return groupMapper.deleteByPrimaryKey(id);
+  }
+
+  public int patch(Group group) {
+    return groupMapper.updateByPrimaryKeySelective(group);
+  }
+
+  public Group select(int id) {
+    return groupMapper.selectByPrimaryKey(id);
+  }
+
+  public Group selectByName(String name) {
+    GroupExample example = new GroupExample();
+    example.createCriteria().andNameEqualTo(name);
+    List<Group> list = groupMapper.selectByExample(example);
+    if (list.isEmpty()) {
+      return null;
+    }
+    return list.get(0);
+  }
+
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<beans xmlns="http://www.springframework.org/schema/beans"-->
+       <!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+       <!--xmlns:context="http://www.springframework.org/schema/context"-->
+       <!--xmlns:tx="http://www.springframework.org/schema/tx"-->
+       <!--xmlns:metrics="http://www.ryantenney.com/schema/metrics"-->
+       <!--xsi:schemaLocation="http://www.springframework.org/schema/beans-->
+       <!--http://www.springframework.org/schema/beans/spring-beans.xsd-->
+       <!--http://www.springframework.org/schema/context/spring-context.xsd-->
+       <!--http://mybatis.org/schema/mybatis-spring-->
+       <!--http://mybatis.org/schema/mybatis-spring.xsd-->
+<!--">-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:metrics="http://www.ryantenney.com/schema/metrics"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		           http://www.ryantenney.com/schema/metrics
+           http://www.ryantenney.com/schema/metrics/metrics-3.0.xsd">
+
+    <!--加载property-placeholder 根据不同profile进行不同的配置加载-->
+    <import resource="classpath:/config/spring-profile-config.xml" />
+
+    <!--开启包扫描-->
+    <context:component-scan base-package="com.horsv.xdiamond">
+        <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
+        <context:exclude-filter expression="org.springframework.web.bind.annotation.ControllerAdvice" type="annotation"/>
+        <!--排除web配置相关类-->
+        <context:exclude-filter expression="com.horsv.xdiamond.config.web.*" type="regex"/>
+    </context:component-scan>
+
+    <!--Java Bean的映射器 功能未知-->
+    <import resource="classpath:/dozer/spring-dozer.xml" />
+
+    <!--加载ldap配置-->
+    <import resource="classpath:/config/spring-ldap.xml" />
+
+    <!--加载数据库配置-->
+    <import resource="classpath:/database/spring-database.xml" />
+
+    <!--加载mybatis配置-->
+    <import resource="classpath:/mybatis/spring-mybatis.xml" />
+
+    <!--加载shiro配置-->
+    <import resource="classpath:/config/spring-shiro-web.xml" />
+
+    <!-- 使用annotation定义事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+    <!-- JSR303 Validator定义 功能未知 -->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+    <!-- transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--dataSource 在spring-database.xml中配置-->
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!--指标监控？？功能未知-->
+    <metrics:metric-registry id="metricRegistry" name="xdiamond-server" />
+
+    <!-- annotation-driven must be included in all context files -->
+    <metrics:annotation-driven metric-registry="metricRegistry" />
+
+    <metrics:register metric-registry="metricRegistry">
+        <bean metrics:name="jvm.garbage" class="com.codahale.metrics.jvm.GarbageCollectorMetricSet" />
+        <bean metrics:name="jvm.memory" class="com.codahale.metrics.jvm.MemoryUsageGaugeSet" />
+        <bean metrics:name="jvm.threads" class="com.codahale.metrics.jvm.ThreadStatesGaugeSet" />
+        <bean metrics:name="jvm.files" class="com.codahale.metrics.jvm.FileDescriptorRatioGauge" />
+
+        <bean metrics:name="jvm.buffers" class="com.codahale.metrics.jvm.BufferPoolMetricSet">
+            <constructor-arg>
+                <bean class="java.lang.management.ManagementFactory" factory-method="getPlatformMBeanServer" />
+            </constructor-arg>
+        </bean>
+    </metrics:register>
+
+</beans>
