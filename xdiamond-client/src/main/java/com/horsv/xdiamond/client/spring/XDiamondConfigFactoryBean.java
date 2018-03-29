@@ -127,70 +127,130 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
     @Override
     public void afterPropertiesSet() throws Exception {
         xDiamondConfig = new XDiamondConfig();
+        //如果客户端程序初始化时未指定xdiamondServer配置，可以加载xdiamond.properties，从这里加载
+        if (StringUtils.isEmpty(serverHost)) {
+            try {
+                Resource[] resources = context.getResources("classpath:xdiamond.properties");
+                if (resources != null) {
+                    for (Resource resource : resources) {
+                        InputStream inputStream = null;
+                        try {
+                            inputStream = resource.getInputStream();
+                            properties.load(inputStream);
+                        } finally {
+                            if (inputStream != null) {
+                                inputStream.close();
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                logger.error("can not load resources from xdiamond.properties, location:", e);
+            }
+        }
 
         if (!StringUtils.isEmpty(groupId)) {
             groupId = helper.replacePlaceholders(groupId, properties);
+            xDiamondConfig.setGroupId(groupId);
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.client.groupId"))){
+            groupId = properties.getProperty("xdiamond.client.groupId");
             xDiamondConfig.setGroupId(groupId);
         }
 
         if (!StringUtils.isEmpty(artifactId)) {
             artifactId = helper.replacePlaceholders(artifactId, properties);
             xDiamondConfig.setArtifactId(artifactId);
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.client.artifactId"))){
+            artifactId = properties.getProperty("xdiamond.client.artifactId");
+            xDiamondConfig.setArtifactId(artifactId);
         }
 
         if (!StringUtils.isEmpty(profile)) {
             profile = helper.replacePlaceholders(profile, properties);
+            xDiamondConfig.setProfile(profile);
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.client.profile"))){
+            profile = properties.getProperty("xdiamond.client.profile");
             xDiamondConfig.setProfile(profile);
         }
 
         if (!StringUtils.isEmpty(version)) {
             version = helper.replacePlaceholders(version, properties);
             xDiamondConfig.setVersion(version);
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.client.version"))){
+            version = properties.getProperty("xdiamond.client.version");
+            xDiamondConfig.setVersion(version);
         }
 
         if (secretKey != null) {
             secretKey = helper.replacePlaceholders(secretKey, properties);
+            xDiamondConfig.setSecretKey(secretKey);
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.client.secretKey"))){
+            serverHost = properties.getProperty("xdiamond.client.secretKey");
             xDiamondConfig.setSecretKey(secretKey);
         }
 
         if (!StringUtils.isEmpty(serverHost)) {
             serverHost = helper.replacePlaceholders(serverHost, properties);
             xDiamondConfig.setServerHost(serverHost);
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.server.host"))){
+            serverHost = properties.getProperty("xdiamond.server.host");
+            xDiamondConfig.setServerHost(serverHost);
         }
 
         if (!StringUtils.isEmpty(serverPort)) {
             serverPort = helper.replacePlaceholders(serverPort, properties);
+            xDiamondConfig.setServerPort(Integer.parseInt(serverPort));
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.server.port"))){
+            serverPort = properties.getProperty("xdiamond.server.port");
             xDiamondConfig.setServerPort(Integer.parseInt(serverPort));
         }
 
         if (!StringUtils.isEmpty(bPrintConfigWhenBoot)) {
             bPrintConfigWhenBoot = helper.replacePlaceholders(bPrintConfigWhenBoot, properties);
             xDiamondConfig.setbPrintConfigWhenBoot(Boolean.parseBoolean(bPrintConfigWhenBoot));
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.bPrintConfigWhenBoot"))){
+            bPrintConfigWhenBoot = properties.getProperty("xdiamond.config.bPrintConfigWhenBoot");
+            xDiamondConfig.setbPrintConfigWhenBoot(Boolean.parseBoolean(bPrintConfigWhenBoot));
         }
 
         if (!StringUtils.isEmpty(bSyncToSystemProperties)) {
             bSyncToSystemProperties = helper.replacePlaceholders(bSyncToSystemProperties, properties);
+            xDiamondConfig.setbSyncToSystemProperties(Boolean.parseBoolean(bSyncToSystemProperties));
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.bSyncToSystemProperties"))){
+            bSyncToSystemProperties = properties.getProperty("xdiamond.config.bSyncToSystemProperties");
             xDiamondConfig.setbSyncToSystemProperties(Boolean.parseBoolean(bSyncToSystemProperties));
         }
 
         if (!StringUtils.isEmpty(bBackOffRetryInterval)) {
             bBackOffRetryInterval = helper.replacePlaceholders(bBackOffRetryInterval, properties);
             xDiamondConfig.setbBackOffRetryInterval(Boolean.parseBoolean(bBackOffRetryInterval));
+        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.bBackOffRetryInterval"))){
+            bBackOffRetryInterval = properties.getProperty("xdiamond.config.bBackOffRetryInterval");
+            xDiamondConfig.setbBackOffRetryInterval(Boolean.parseBoolean(bBackOffRetryInterval));
         }
 
         if (!StringUtils.isEmpty(maxRetryTimes)) {
             maxRetryTimes = helper.replacePlaceholders(maxRetryTimes, properties);
             xDiamondConfig.setMaxRetryTimes(Integer.parseInt(maxRetryTimes));
+//        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.maxRetryTimes"))){
+//            maxRetryTimes = properties.getProperty("xdiamond.config.maxRetryTimes");
+//            xDiamondConfig.setMaxRetryTimes(Integer.parseInt(maxRetryTimes));
         }
 
         if (!StringUtils.isEmpty(retryIntervalSeconds)) {
             retryIntervalSeconds = helper.replacePlaceholders(retryIntervalSeconds, properties);
             xDiamondConfig.setRetryIntervalSeconds(Integer.parseInt(retryIntervalSeconds));
+//        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.retryIntervalSeconds"))){
+//            retryIntervalSeconds = properties.getProperty("xdiamond.config.retryIntervalSeconds");
+//            xDiamondConfig.setRetryIntervalSeconds(Integer.parseInt(retryIntervalSeconds));
         }
 
         if (!StringUtils.isEmpty(maxRetryIntervalSeconds)) {
             maxRetryIntervalSeconds = helper.replacePlaceholders(maxRetryIntervalSeconds, properties);
             xDiamondConfig.setMaxRetryIntervalSeconds(Integer.parseInt(maxRetryIntervalSeconds));
+//        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.maxRetryIntervalSeconds"))){
+//            maxRetryIntervalSeconds = properties.getProperty("xdiamond.config.maxRetryIntervalSeconds");
+//            xDiamondConfig.setMaxRetryIntervalSeconds(Integer.parseInt(maxRetryIntervalSeconds));
         }
 
         xDiamondConfig.init();
