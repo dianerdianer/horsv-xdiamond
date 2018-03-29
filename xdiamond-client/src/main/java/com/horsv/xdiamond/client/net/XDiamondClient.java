@@ -2,8 +2,8 @@ package com.horsv.xdiamond.client.net;
 
 import com.horsv.xdiamond.client.XDiamondConfig;
 import com.horsv.xdiamond.common.ResolvedConfigVO;
-import com.horsv.xdiamond.net.MessageDecoder;
-import com.horsv.xdiamond.net.MessageEncoder;
+import com.horsv.xdiamond.common.net.MessageDecoder;
+import com.horsv.xdiamond.common.net.MessageEncoder;
 import com.horsv.xdiamond.common.util.ThreadFactoryBuilder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
