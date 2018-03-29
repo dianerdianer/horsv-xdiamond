@@ -168,7 +168,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(profile)) {
             profile = helper.replacePlaceholders(profile, properties);
             xDiamondConfig.setProfile(profile);
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.client.profile"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.client.profile"))){
             profile = properties.getProperty("xdiamond.client.profile");
             xDiamondConfig.setProfile(profile);
         }
@@ -176,7 +176,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(version)) {
             version = helper.replacePlaceholders(version, properties);
             xDiamondConfig.setVersion(version);
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.client.version"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.client.version"))){
             version = properties.getProperty("xdiamond.client.version");
             xDiamondConfig.setVersion(version);
         }
@@ -184,7 +184,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (secretKey != null) {
             secretKey = helper.replacePlaceholders(secretKey, properties);
             xDiamondConfig.setSecretKey(secretKey);
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.client.secretKey"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.client.secretKey"))){
             serverHost = properties.getProperty("xdiamond.client.secretKey");
             xDiamondConfig.setSecretKey(secretKey);
         }
@@ -192,7 +192,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(serverHost)) {
             serverHost = helper.replacePlaceholders(serverHost, properties);
             xDiamondConfig.setServerHost(serverHost);
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.server.host"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.server.host"))){
             serverHost = properties.getProperty("xdiamond.server.host");
             xDiamondConfig.setServerHost(serverHost);
         }
@@ -200,7 +200,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(serverPort)) {
             serverPort = helper.replacePlaceholders(serverPort, properties);
             xDiamondConfig.setServerPort(Integer.parseInt(serverPort));
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.server.port"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.server.port"))){
             serverPort = properties.getProperty("xdiamond.server.port");
             xDiamondConfig.setServerPort(Integer.parseInt(serverPort));
         }
@@ -208,7 +208,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(bPrintConfigWhenBoot)) {
             bPrintConfigWhenBoot = helper.replacePlaceholders(bPrintConfigWhenBoot, properties);
             xDiamondConfig.setbPrintConfigWhenBoot(Boolean.parseBoolean(bPrintConfigWhenBoot));
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.bPrintConfigWhenBoot"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.config.bPrintConfigWhenBoot"))){
             bPrintConfigWhenBoot = properties.getProperty("xdiamond.config.bPrintConfigWhenBoot");
             xDiamondConfig.setbPrintConfigWhenBoot(Boolean.parseBoolean(bPrintConfigWhenBoot));
         }
@@ -216,7 +216,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(bSyncToSystemProperties)) {
             bSyncToSystemProperties = helper.replacePlaceholders(bSyncToSystemProperties, properties);
             xDiamondConfig.setbSyncToSystemProperties(Boolean.parseBoolean(bSyncToSystemProperties));
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.bSyncToSystemProperties"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.config.bSyncToSystemProperties"))){
             bSyncToSystemProperties = properties.getProperty("xdiamond.config.bSyncToSystemProperties");
             xDiamondConfig.setbSyncToSystemProperties(Boolean.parseBoolean(bSyncToSystemProperties));
         }
@@ -224,7 +224,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(bBackOffRetryInterval)) {
             bBackOffRetryInterval = helper.replacePlaceholders(bBackOffRetryInterval, properties);
             xDiamondConfig.setbBackOffRetryInterval(Boolean.parseBoolean(bBackOffRetryInterval));
-        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.bBackOffRetryInterval"))){
+        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.config.bBackOffRetryInterval"))){
             bBackOffRetryInterval = properties.getProperty("xdiamond.config.bBackOffRetryInterval");
             xDiamondConfig.setbBackOffRetryInterval(Boolean.parseBoolean(bBackOffRetryInterval));
         }
@@ -232,7 +232,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(maxRetryTimes)) {
             maxRetryTimes = helper.replacePlaceholders(maxRetryTimes, properties);
             xDiamondConfig.setMaxRetryTimes(Integer.parseInt(maxRetryTimes));
-//        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.maxRetryTimes"))){
+//        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.config.maxRetryTimes"))){
 //            maxRetryTimes = properties.getProperty("xdiamond.config.maxRetryTimes");
 //            xDiamondConfig.setMaxRetryTimes(Integer.parseInt(maxRetryTimes));
         }
@@ -240,7 +240,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(retryIntervalSeconds)) {
             retryIntervalSeconds = helper.replacePlaceholders(retryIntervalSeconds, properties);
             xDiamondConfig.setRetryIntervalSeconds(Integer.parseInt(retryIntervalSeconds));
-//        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.retryIntervalSeconds"))){
+//        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.config.retryIntervalSeconds"))){
 //            retryIntervalSeconds = properties.getProperty("xdiamond.config.retryIntervalSeconds");
 //            xDiamondConfig.setRetryIntervalSeconds(Integer.parseInt(retryIntervalSeconds));
         }
@@ -248,7 +248,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
         if (!StringUtils.isEmpty(maxRetryIntervalSeconds)) {
             maxRetryIntervalSeconds = helper.replacePlaceholders(maxRetryIntervalSeconds, properties);
             xDiamondConfig.setMaxRetryIntervalSeconds(Integer.parseInt(maxRetryIntervalSeconds));
-//        }else if(StringUtils.isEmpty(properties.getProperty("xdiamond.config.maxRetryIntervalSeconds"))){
+//        }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.config.maxRetryIntervalSeconds"))){
 //            maxRetryIntervalSeconds = properties.getProperty("xdiamond.config.maxRetryIntervalSeconds");
 //            xDiamondConfig.setMaxRetryIntervalSeconds(Integer.parseInt(maxRetryIntervalSeconds));
         }
