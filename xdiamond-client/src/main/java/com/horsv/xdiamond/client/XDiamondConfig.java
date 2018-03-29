@@ -98,6 +98,7 @@ public class XDiamondConfig {
     }
 
     public void init() {
+        //是否需要从本地获取配置
         boolean bShouldLoadLocalConfig = true;
         xDiamondClient =
                 new XDiamondClient(this, serverHost, serverPort, bBackOffRetryInterval, maxRetryTimes,
@@ -108,10 +109,12 @@ public class XDiamondConfig {
             // 如果连接服务器成功，则尝试获得配置
             boolean await = future.await(10, TimeUnit.SECONDS);
             if (await && future.isSuccess()) {
+                //获取服务端返回的配置信息
                 Future<List<ResolvedConfigVO>> configFuture =
                         xDiamondClient.getConfigs(groupId, artifactId, version, profile, secretKey);
                 List<ResolvedConfigVO> resolvedConfigs = configFuture.get(10, TimeUnit.SECONDS);
                 if (configFuture.isSuccess()) {
+                    //配置获取成功后，先保存到本地
                     loadConfig(resolvedConfigs);
                     logger.info("load config from xdiamond server success. " + toProjectInfoString());
                     bShouldLoadLocalConfig = false;
@@ -156,6 +159,9 @@ public class XDiamondConfig {
         timer.schedule(new GetConfigTask(this), 0);
     }
 
+    /**
+     * 启动线程，进行配置更新操作
+     */
     static class GetConfigTask extends TimerTask {
         XDiamondConfig xDiamondConfig;
 
@@ -191,6 +197,11 @@ public class XDiamondConfig {
         timer.cancel();
     }
 
+    /**
+     * 加载配置
+     * @param resolvedConfigVOs
+     * @throws IOException
+     */
     public synchronized void loadConfig(List<ResolvedConfigVO> resolvedConfigVOs) throws IOException {
         // 先保存到本地
         saveLocalConfig(ResolvedConfigVO.toJSONString(resolvedConfigVOs));
@@ -231,6 +242,10 @@ public class XDiamondConfig {
         }
     }
 
+    /**
+     * 通知listener
+     * @param event
+     */
     private void notifyListener(final ConfigEvent event) {
         List<OneKeyListener> list = oneKeyListenerMap.get(event.getKey());
         if (list != null) {
@@ -298,6 +313,11 @@ public class XDiamondConfig {
         }
     }
 
+    /**
+     * 保存配置到本地
+     * @param jsonConfigString
+     * @throws IOException
+     */
     private void saveLocalConfig(String jsonConfigString) throws IOException {
         String dirPath =
                 localConfigPath + File.separator + groupId + File.separator + artifactId + File.separator
