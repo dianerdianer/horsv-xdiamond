@@ -185,7 +185,7 @@ public class XDiamondConfigFactoryBean implements ApplicationContextAware, Prior
             secretKey = helper.replacePlaceholders(secretKey, properties);
             xDiamondConfig.setSecretKey(secretKey);
         }else if(!StringUtils.isEmpty(properties.getProperty("xdiamond.client.secretKey"))){
-            serverHost = properties.getProperty("xdiamond.client.secretKey");
+            secretKey = properties.getProperty("xdiamond.client.secretKey");
             xDiamondConfig.setSecretKey(secretKey);
         }
 
